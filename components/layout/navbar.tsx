@@ -1,14 +1,26 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useLogout } from "@/lib/hooks/use-auth";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useLogout, useProfile } from "@/lib/hooks/use-auth";
 import { useAuthStore } from "@/lib/store/auth-store";
-import { LogOut, User } from "lucide-react";
+import { LayoutDashboard, LogOut, User } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export function Navbar() {
-  const { user, isAuthenticated } = useAuthStore();
-  const { mutate: logout } = useLogout();
+  const pathname = usePathname();
+  const { user, isAuthenticated, isHydrated } = useAuthStore();
+  const { mutate: logout, isPending } = useLogout();
+  const isDashboard = pathname === "/dashboard";
+
+  useProfile(isDashboard);
+
+  const handleLogout = () => {
+    if (!isPending) {
+      logout();
+    }
+  };
 
   return (
     <nav className="border-b">
@@ -19,7 +31,12 @@ export function Navbar() {
           </Link>
 
           <div className="flex items-center gap-4">
-            {isAuthenticated && user ? (
+            {!isHydrated ? (
+              <div className="flex items-center gap-2">
+                <Skeleton className="h-8 w-32" />
+                <Skeleton className="h-8 w-20" />
+              </div>
+            ) : isAuthenticated && user ? (
               <>
                 <div className="flex items-center gap-2 text-sm">
                   <User className="h-4 w-4" />
@@ -28,9 +45,24 @@ export function Navbar() {
                     ({user.credits} credits)
                   </span>
                 </div>
-                <Button variant="outline" size="sm" onClick={() => logout()}>
+
+                {!isDashboard && (
+                  <Link href="/dashboard">
+                    <Button variant="default" size="sm">
+                      <LayoutDashboard className="h-4 w-4 mr-2" />
+                      Dashboard
+                    </Button>
+                  </Link>
+                )}
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleLogout}
+                  disabled={isPending}
+                >
                   <LogOut className="h-4 w-4 mr-2" />
-                  Logout
+                  {isPending ? "Logging out..." : "Logout"}
                 </Button>
               </>
             ) : (

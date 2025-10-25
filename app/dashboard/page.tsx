@@ -13,15 +13,28 @@ import { useEffect } from "react";
 
 export default function DashboardPage() {
   const router = useRouter();
-  const { isAuthenticated, user } = useAuthStore();
-  const { data: stats, isLoading: statsLoading } = useDashboardStats();
-  const { data: referrals, isLoading: referralsLoading } = useReferrals();
+  const { isAuthenticated, user, isHydrated } = useAuthStore();
+  const { data: stats, isLoading: statsLoading } = useDashboardStats(true);
+  const { data: referrals, isLoading: referralsLoading } = useReferrals(true);
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.push("/login");
+    if (isHydrated && !isAuthenticated) {
+      router.replace("/login");
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, isHydrated, router]);
+
+  if (!isHydrated) {
+    return (
+      <div className="container mx-auto px-4 py-8 space-y-8">
+        <Skeleton className="h-12 w-64" />
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {[...Array(4)].map((_, i) => (
+            <Skeleton key={i} className="h-32" />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated || !user) {
     return null;
@@ -42,11 +55,17 @@ export default function DashboardPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground">
-          Track your referrals and credits
-        </p>
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold">Dashboard</h1>
+          <p className="text-muted-foreground">
+            Track your referrals and credits
+          </p>
+        </div>
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse" />
+          <span>Auto-refresh enabled</span>
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -76,9 +95,7 @@ export default function DashboardPage() {
         />
       </div>
 
-      {!user.hasPurchased && (
-        <PurchaseButton hasPurchased={user.hasPurchased} />
-      )}
+      <PurchaseButton />
 
       {stats?.referralLink && <ReferralLink link={stats.referralLink} />}
 

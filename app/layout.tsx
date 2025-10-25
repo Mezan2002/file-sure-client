@@ -27,7 +27,7 @@ export default function RootLayout({
         <QueryProvider>
           <Navbar />
           <main className="min-h-[calc(100vh-4rem)]">{children}</main>
-          <Toaster />
+          <Toaster position="top-right" richColors closeButton />
         </QueryProvider>
       </body>
     </html>

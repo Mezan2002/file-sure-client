@@ -9,14 +9,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useCreatePurchase } from "@/lib/hooks/use-purchases";
+import { useAuthStore } from "@/lib/store/auth-store";
 import { ShoppingCart } from "lucide-react";
 
-interface PurchaseButtonProps {
-  hasPurchased: boolean;
-}
-
-export function PurchaseButton({ hasPurchased }: PurchaseButtonProps) {
+export function PurchaseButton() {
   const { mutate: createPurchase, isPending } = useCreatePurchase();
+  const hasPurchased = useAuthStore((state) => state.hasPurchased);
 
   const handlePurchase = () => {
     createPurchase({
@@ -26,6 +24,7 @@ export function PurchaseButton({ hasPurchased }: PurchaseButtonProps) {
     });
   };
 
+  // ✅ Check purchase status from store - persisted in localStorage
   if (hasPurchased) {
     return null;
   }
@@ -41,12 +40,21 @@ export function PurchaseButton({ hasPurchased }: PurchaseButtonProps) {
       <CardContent>
         <Button
           onClick={handlePurchase}
-          disabled={isPending}
+          disabled={isPending} // ✅ Disabled only while processing
           className="w-full"
           size="lg"
         >
-          <ShoppingCart className="mr-2 h-4 w-4" />
-          {isPending ? "Processing..." : "Buy Premium E-Book - $29.99"}
+          {isPending ? (
+            <>
+              <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-background border-t-transparent" />
+              Processing...
+            </>
+          ) : (
+            <>
+              <ShoppingCart className="mr-2 h-4 w-4" />
+              Buy Premium E-Book - $29.99
+            </>
+          )}
         </Button>
       </CardContent>
     </Card>

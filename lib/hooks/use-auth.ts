@@ -43,17 +43,24 @@ export const useLogin = () => {
   });
 };
 
-export const useProfile = () => {
+export const useProfile = (enablePolling = false) => {
   const setUser = useAuthStore((state) => state.setUser);
+  const setPurchased = useAuthStore((state) => state.setPurchased);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   return useQuery({
     queryKey: ["profile"],
     queryFn: async () => {
       const data = await authApi.getProfile();
       setUser(data);
+      setPurchased(data.hasPurchased);
       return data;
     },
     retry: false,
+    enabled: isAuthenticated,
+    staleTime: 30 * 1000,
+    refetchInterval: enablePolling ? 30 * 1000 : false,
+    refetchIntervalInBackground: false,
   });
 };
 
@@ -68,8 +75,10 @@ export const useLogout = () => {
       clearUser();
       removeAuthToken();
       queryClient.clear();
-      router.push("/");
-      toast.success("Logged out successfully");
+      router.push("/login");
+      setTimeout(() => {
+        toast.success("Logged out successfully");
+      }, 100);
     },
     onError: (error: AxiosError<ApiResponse>) => {
       const message = error.response?.data?.message || "Logout failed";
