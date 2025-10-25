@@ -3,6 +3,7 @@
 import { LoginForm } from "@/components/auth/login-form";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuthStore } from "@/lib/store/auth-store";
+import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -28,5 +29,15 @@ export default function LoginPage() {
     return null;
   }
 
-  return <LoginForm />;
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <div className="min-w-full md:min-w-7xl flex items-center justify-center">
+        <LoginForm />
+      </div>
+    </motion.div>
+  );
 }

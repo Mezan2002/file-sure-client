@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FileSure Frontend
 
-## Getting Started
+Modern, responsive web application for the FileSure Referral & Credit System built with Next.js 15, TypeScript, Tailwind CSS, and TanStack Query.
 
-First, run the development server:
+## 📖 Overview
 
-```bash
+FileSure is a referral and credit management platform that allows users to earn credits by referring friends. This frontend application provides an intuitive interface for user authentication, referral tracking, and real-time dashboard analytics.
+
+## ✨ Features
+
+- 🔐 **Secure Authentication** - Register, login, logout with JWT
+- 👥 **Referral System** - Share unique referral links
+- 💰 **Credit Tracking** - Real-time credit balance updates
+- 📊 **Interactive Dashboard** - View referral stats and conversions
+- 🎨 **Modern UI** - Responsive design with Tailwind CSS
+- 🔄 **Auto-Refresh** - Dashboard polls for updates every 30 seconds
+- 📋 **Copy to Clipboard** - Easy referral link sharing
+- 🎯 **Type-Safe** - Full TypeScript implementation
+- 🚀 **Optimized Performance** - TanStack Query caching
+- 📱 **Mobile Responsive** - Works on all devices
+
+## 🏗️ Architecture
+
+## 🚀 Tech Stack
+
+- **Framework:** Next.js 15 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS
+- **UI Components:** Shadcn UI
+- **Animation:** Framer Motion
+- **State Management:** Zustand (client state) + TanStack Query (server state)
+- **Data Fetching:** TanStack Query (React Query)
+- **HTTP Client:** Axios
+- **Form Handling:** React Hook Form
+- **Validation:** Zod
+- **Notifications:** Sonner (toast)
+- **Icons:** Lucide React
+
+## 📦 Installation
+
+### Prerequisites
+
+- Node.js v18 or higher
+- npm or yarn
+- Backend API running (see backend README)
+
+### Setup Steps
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/filesure-frontend.git
+   cd filesure-frontend
+   ```
+
+### Install dependencies
+
+npm install
+
+### Environment Configuration
+
+cp .env.example .env.local
+
+### Update .env.local:
+
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+### Run Development Server
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Open http://localhost:3000
