@@ -9,10 +9,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { toast } from "@/hooks/use-toast";
 import { copyToClipboard } from "@/lib/utils";
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 interface ReferralLinkProps {
   link: string;
@@ -25,16 +25,13 @@ export function ReferralLink({ link }: ReferralLinkProps) {
     const success = await copyToClipboard(link);
     if (success) {
       setCopied(true);
-      toast({
-        title: "Copied!",
+      toast.success("Copied!", {
         description: "Referral link copied to clipboard",
       });
       setTimeout(() => setCopied(false), 2000);
     } else {
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: "Failed to copy link",
-        variant: "destructive",
       });
     }
   };

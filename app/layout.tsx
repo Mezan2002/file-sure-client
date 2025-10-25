@@ -1,6 +1,6 @@
 import { Navbar } from "@/components/layout/navbar";
 import { QueryProvider } from "@/components/providers/query-provider";
-import { ToastProvider } from "@/components/providers/toast-provider";
+import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
@@ -27,7 +27,7 @@ export default function RootLayout({
         <QueryProvider>
           <Navbar />
           <main className="min-h-[calc(100vh-4rem)]">{children}</main>
-          <ToastProvider />
+          <Toaster />
         </QueryProvider>
       </body>
     </html>

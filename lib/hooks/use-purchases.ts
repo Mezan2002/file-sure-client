@@ -1,6 +1,8 @@
-import { toast } from "@/hooks/use-toast";
 import { purchasesApi } from "@/lib/api/purchases";
+import { ApiResponse } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { toast } from "sonner";
 
 export const useCreatePurchase = () => {
   const queryClient = useQueryClient();
@@ -13,18 +15,15 @@ export const useCreatePurchase = () => {
       queryClient.invalidateQueries({ queryKey: ["purchases"] });
       queryClient.invalidateQueries({ queryKey: ["profile"] });
 
-      toast({
-        title: "Purchase Successful!",
+      toast.success("Purchase Successful!", {
         description: data.isFirstPurchase
           ? "You earned 2 credits! 🎉"
           : "Purchase completed successfully",
       });
     },
-    onError: (error: any) => {
-      toast({
-        title: "Error",
+    onError: (error: AxiosError<ApiResponse>) => {
+      toast.error("Error", {
         description: error.response?.data?.message || "Purchase failed",
-        variant: "destructive",
       });
     },
   });

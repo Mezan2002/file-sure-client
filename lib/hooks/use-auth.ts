@@ -1,9 +1,11 @@
-import { toast } from "@/hooks/use-toast";
 import { authApi } from "@/lib/api/auth";
 import { removeAuthToken } from "@/lib/api/client";
 import { useAuthStore } from "@/lib/store/auth-store";
+import type { ApiResponse } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export const useRegister = () => {
   const router = useRouter();
@@ -13,18 +15,12 @@ export const useRegister = () => {
     mutationFn: authApi.register,
     onSuccess: (data) => {
       setUser(data.data.user);
-      toast({
-        title: "Success",
-        description: "Registration successful!",
-      });
+      toast.success("Registration successful!");
       router.push("/dashboard");
     },
-    onError: (error: any) => {
-      toast({
-        title: "Error",
-        description: error.response?.data?.message || "Registration failed",
-        variant: "destructive",
-      });
+    onError: (error: AxiosError<ApiResponse>) => {
+      const message = error.response?.data?.message || "Registration failed";
+      toast.error(message);
     },
   });
 };
@@ -37,18 +33,12 @@ export const useLogin = () => {
     mutationFn: authApi.login,
     onSuccess: (data) => {
       setUser(data.data.user);
-      toast({
-        title: "Success",
-        description: "Login successful!",
-      });
+      toast.success("Login successful!");
       router.push("/dashboard");
     },
-    onError: (error: any) => {
-      toast({
-        title: "Error",
-        description: error.response?.data?.message || "Login failed",
-        variant: "destructive",
-      });
+    onError: (error: AxiosError<ApiResponse>) => {
+      const message = error.response?.data?.message || "Login failed";
+      toast.error(message);
     },
   });
 };
@@ -58,11 +48,12 @@ export const useProfile = () => {
 
   return useQuery({
     queryKey: ["profile"],
-    queryFn: authApi.getProfile,
-    retry: false,
-    onSuccess: (data) => {
+    queryFn: async () => {
+      const data = await authApi.getProfile();
       setUser(data);
+      return data;
     },
+    retry: false,
   });
 };
 
@@ -78,10 +69,11 @@ export const useLogout = () => {
       removeAuthToken();
       queryClient.clear();
       router.push("/");
-      toast({
-        title: "Logged out",
-        description: "You have been logged out successfully",
-      });
+      toast.success("Logged out successfully");
+    },
+    onError: (error: AxiosError<ApiResponse>) => {
+      const message = error.response?.data?.message || "Logout failed";
+      toast.error(message);
     },
   });
 };
